@@ -85,32 +85,32 @@ class KerrNewman:
         for i in range(4):
             vals[i] = vec[i + 4]
         vals[4] = -2.0 * (
-            chl[0][0][1] * vec[4] * vec[5]
-            + chl[0][0][2] * vec[4] * vec[6]
-            + chl[0][1][3] * vec[5] * vec[7]
-            + chl[0][2][3] * vec[6] * vec[7]
+            chl[0, 0, 1] * vec[4] * vec[5]
+            + chl[0, 0, 2] * vec[4] * vec[6]
+            + chl[0, 1, 3] * vec[5] * vec[7]
+            + chl[0, 2, 3] * vec[6] * vec[7]
         )
         vals[5] = -1.0 * (
-            chl[1][0][0] * vec[4] * vec[4]
-            + 2 * chl[1][0][3] * vec[4] * vec[7]
-            + chl[1][1][1] * vec[5] * vec[5]
-            + 2 * chl[1][1][2] * vec[5] * vec[6]
-            + chl[1][2][2] * vec[6] * vec[6]
-            + chl[1][3][3] * vec[7] * vec[7]
+            chl[1, 0, 0] * vec[4] * vec[4]
+            + 2 * chl[1, 0, 3] * vec[4] * vec[7]
+            + chl[1, 1, 1] * vec[5] * vec[5]
+            + 2 * chl[1, 1, 2] * vec[5] * vec[6]
+            + chl[1, 2, 2] * vec[6] * vec[6]
+            + chl[1, 3, 3] * vec[7] * vec[7]
         )
         vals[6] = -1.0 * (
-            chl[2][0][0] * vec[4] * vec[4]
-            + 2 * chl[2][0][3] * vec[4] * vec[7]
-            + chl[2][1][1] * vec[5] * vec[5]
-            + 2 * chl[2][1][2] * vec[5] * vec[6]
-            + chl[2][2][2] * vec[6] * vec[6]
-            + chl[2][3][3] * vec[7] * vec[7]
+            chl[2, 0, 0] * vec[4] * vec[4]
+            + 2 * chl[2, 0, 3] * vec[4] * vec[7]
+            + chl[2, 1, 1] * vec[5] * vec[5]
+            + 2 * chl[2, 1, 2] * vec[5] * vec[6]
+            + chl[2, 2, 2] * vec[6] * vec[6]
+            + chl[2, 3, 3] * vec[7] * vec[7]
         )
         vals[7] = -2.0 * (
-            chl[3][0][1] * vec[4] * vec[5]
-            + chl[3][0][2] * vec[4] * vec[6]
-            + chl[3][1][3] * vec[5] * vec[7]
-            + chl[3][2][3] * vec[6] * vec[7]
+            chl[3, 0, 1] * vec[4] * vec[5]
+            + chl[3, 0, 2] * vec[4] * vec[6]
+            + chl[3, 1, 3] * vec[5] * vec[7]
+            + chl[3, 2, 3] * vec[6] * vec[7]
         )
         vals[4:] -= self.q.value * np.dot(
             vec[4:].reshape((4,)), np.matmul(metric, maxwell)
@@ -161,14 +161,31 @@ class KerrNewman:
             **OdeMethodKwargs
         )
 
+<<<<<<< HEAD
+        _event_hor = (
+            kerrnewman_utils.event_horizon(
+                self.schwarzschild_r.value, self.a, self.Q.value
+            )[0]
+            * 1.001
+        )
+=======
         _scr = self.scr.value * 1.001
 
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
         while ODE.t < end_lambda:
             vecs.append(ODE.y)
             lambdas.append(ODE.t)
             ODE.step()
+<<<<<<< HEAD
+            if (not singularity_reached) and (ODE.y[1] <= _event_hor):
+                warnings.warn(
+                    "r component of position vector reached event horizon ",
+                    RuntimeWarning,
+                )
+=======
             if (not crossed_event_horizon) and (ODE.y[1] <= _scr):
                 warnings.warn("particle reached Schwarzchild Radius. ", RuntimeWarning)
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
                 if stop_on_singularity:
                     break
                 else:
@@ -225,6 +242,49 @@ class KerrNewman:
             t_bound=1e300,
             **OdeMethodKwargs
         )
+<<<<<<< HEAD
+
+        _event_hor = (
+            kerrnewman_utils.event_horizon(
+                self.schwarzschild_r.value, self.a, self.Q.value
+            )[0]
+            * 1.001
+        )
+
+        def yielder_func():
+            nonlocal singularity_reached
+            while True:
+                if not return_cartesian:
+                    yield (ODE.t, ODE.y)
+                else:
+                    temp = np.copy(ODE.y)
+                    temp[1:4] = BLToCartesian_pos(ODE.y[1:4], self.a)
+                    temp[5:8] = BLToCartesian_vel(ODE.y[1:4], ODE.y[5:8], self.a)
+                    yield (ODE.t, temp)
+                ODE.step()
+                if (not singularity_reached) and (ODE.y[1] <= _event_hor):
+                    warnings.warn(
+                        "r component of position vector reached event horizon. ",
+                        RuntimeWarning,
+                    )
+                    if stop_on_singularity:
+                        break
+                    else:
+                        singularity_reached = True
+
+        if return_cartesian:
+            self.units_list = [
+                u.s,
+                u.m,
+                u.m,
+                u.m,
+                u.one,
+                u.m / u.s,
+                u.m / u.s,
+                u.m / u.s,
+            ]
+        return yielder_func()
+=======
         crossed_event_horizon = False
         _scr = self.scr.value * 1.001
 
@@ -244,3 +304,4 @@ class KerrNewman:
                     break
                 else:
                     crossed_event_horizon = True
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269

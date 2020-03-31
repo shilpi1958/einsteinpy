@@ -1,7 +1,13 @@
 import astropy.units as u
 import numpy as np
+from astropy import constants
 
 from einsteinpy import constant, utils
+
+c = constants.c
+G = constants.G
+eps0 = constants.eps0
+coulombs_const = 1 / (4 * np.pi * eps0)
 
 nonzero_christoffels_list = [
     (0, 0, 1),
@@ -40,7 +46,7 @@ nonzero_christoffels_list = [
 
 
 def charge_length_scale(
-    Q, c=constant.c.value, G=constant.G.value, Cc=constant.coulombs_const.value
+    Q, c=constant.c.value, G=constant.G.value, Cc=coulombs_const.value
 ):
     """
     Returns a length scale corrosponding to the Electric Charge Q of the mass
@@ -122,16 +128,70 @@ def delta(
     return (r ** 2) - (Rs * r) + (a ** 2) + (charge_length_scale(Q, c, G, Cc) ** 2)
 
 
+<<<<<<< HEAD
+def event_horizon(
+    Rs,
+=======
 def metric(
     r,
     theta,
     M,
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
     a,
     Q,
     c=constant.c.value,
     G=constant.G.value,
+<<<<<<< HEAD
+    Cc=coulombs_const.value,
+    theta=np.pi / 2,
+    coord="BL",
+):
+    """
+    Calculate the radius of event horizon of Kerr-Newman black hole
+
+    Parameters
+    ----------
+    Rs : float
+        Schwarzschild Radius
+    a : float
+        Black hole spin factor
+    theta : float
+        Angle from z-axis in Boyer-Lindquist coordinates in radians. Mandatory for coord=='Spherical'. Defaults to pi/2.
+    Q : float
+        Charge on the massive body
+    c : float
+        Speed of light
+    G : float
+        Gravitational constant
+    Cc : float
+        Coulomb's constant
+    coord : str
+        Output coordinate system. 'BL' for Boyer-Lindquist & 'Spherical' for spherical. Defaults to 'BL'.
+
+    Returns
+    -------
+    ~numpy.array
+        [Radius of event horizon(R), angle from z axis(theta)] in BL/Spherical coordinates
+    
+    """
+
+    Rh = 0.5 * (
+        Rs + np.sqrt((Rs ** 2) - 4 * (a ** 2 + (charge_length_scale(Q, c, G, Cc)) ** 2))
+    )
+    if coord == "BL":
+        ans = np.array([Rh, theta], dtype=float)
+    else:
+        ans = utils.CartesianToSpherical_pos(
+            utils.BLToCartesian_pos(np.array([Rh, theta, 0.0]), a)
+        )[:2]
+    return ans
+
+
+def metric(c, G, Cc, r, theta, Rs, a, Q):
+=======
     Cc=constant.coulombs_const.value,
 ):
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
     """
     Returns the Kerr-Newman Metric
 

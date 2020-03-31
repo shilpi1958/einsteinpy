@@ -1,6 +1,10 @@
 from datetime import datetime
 
 import alabaster
+<<<<<<< HEAD
+import einsteinpy
+=======
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
 
 project = "EinsteinPy"
 year = datetime.now().year

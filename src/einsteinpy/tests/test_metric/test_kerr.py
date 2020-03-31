@@ -28,6 +28,10 @@ _c = constant.c.value
             ),
             0 * u.s,
             4e24 * u.kg,
+<<<<<<< HEAD
+            2e-3,
+=======
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
             0.0,
             0.001,
             {"stepsize": 0.5e-6},
@@ -44,6 +48,10 @@ _c = constant.c.value
             ),
             0 * u.s,
             5.972e24 * u.kg,
+<<<<<<< HEAD
+            2e-3,
+=======
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
             0.0,
             0.0001,
             {"stepsize": 0.5e-6},
@@ -143,6 +151,10 @@ def test_calculate_trajectory3():
             ),
             0 * u.s,
             4e24 * u.kg,
+<<<<<<< HEAD
+            2e-3,
+=======
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
             0.0,
             0.0003,
             {"stepsize": 0.3e-6},

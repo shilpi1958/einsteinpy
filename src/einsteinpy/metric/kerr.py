@@ -140,15 +140,30 @@ class Kerr:
             t_bound=end_lambda,
             **OdeMethodKwargs
         )
+<<<<<<< HEAD
+        _scr = self.schwarzschild_r.value * 1.001
+        _event_hor = (
+            kerr_utils.event_horizon(self.schwarzschild_r.value, self.a)[0] * 1.001
+        )
+=======
 
         _event_hor = kerr_utils.event_horizon(self.M.value, self.a.value)[0] * 1.001
 
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
         while ODE.t < end_lambda:
             vecs.append(ODE.y)
             lambdas.append(ODE.t)
             ODE.step()
+<<<<<<< HEAD
+            if (not singularity_reached) and (ODE.y[1] <= _event_hor):
+                warnings.warn(
+                    "r component of position vector reached event horizon. ",
+                    RuntimeWarning,
+                )
+=======
             if (not crossed_event_horizon) and (ODE.y[1] <= _event_hor):
                 warnings.warn("particle reached event horizon. ", RuntimeWarning)
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
                 if stop_on_singularity:
                     break
                 else:
@@ -205,6 +220,46 @@ class Kerr:
             t_bound=1e300,
             **OdeMethodKwargs
         )
+<<<<<<< HEAD
+        _scr = self.schwarzschild_r.value * 1.001
+        _event_hor = (
+            kerr_utils.event_horizon(self.schwarzschild_r.value, self.a)[0] * 1.001
+        )
+
+        def yielder_func():
+            nonlocal singularity_reached
+            while True:
+                if not return_cartesian:
+                    yield (ODE.t, ODE.y)
+                else:
+                    temp = np.copy(ODE.y)
+                    temp[1:4] = BLToCartesian_pos(ODE.y[1:4], self.a)
+                    temp[5:8] = BLToCartesian_vel(ODE.y[1:4], ODE.y[5:8], self.a)
+                    yield (ODE.t, temp)
+                ODE.step()
+                if (not singularity_reached) and (ODE.y[1] <= _event_hor):
+                    warnings.warn(
+                        "r component of position vector reached event horizon. ",
+                        RuntimeWarning,
+                    )
+                    if stop_on_singularity:
+                        break
+                    else:
+                        singularity_reached = True
+
+        if return_cartesian:
+            self.units_list = [
+                u.s,
+                u.m,
+                u.m,
+                u.m,
+                u.one,
+                u.m / u.s,
+                u.m / u.s,
+                u.m / u.s,
+            ]
+        return yielder_func()
+=======
         crossed_event_horizon = False
         _event_hor = kerr_utils.event_horizon(self.M.value, self.a.value)[0] * 1.001
 
@@ -224,3 +279,4 @@ class Kerr:
                     break
                 else:
                     crossed_event_horizon = True
+>>>>>>> 0e311bec1be2508a28ebd8a3f8b7b944db997269
